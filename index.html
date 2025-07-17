@@ -1,1 +1,70 @@
-<!DOCTYPE html><html><head><title>SiteSnap</title></head><body><h1>Welcome to SiteSnap</h1></body></html>
+import React from "react";
+
+export default function PricingPage() {
+  return (
+    <div className="min-h-screen bg-gray-50 p-6 text-gray-800">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-2">Simple Pricing for Roofing Teams</h1>
+        <p className="text-lg text-gray-600">
+          Start with a 30-day free trial of the Team plan. No credit card needed.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {/* Starter Plan */}
+        <div className="bg-white shadow-xl rounded-2xl p-6 border border-gray-200">
+          <h2 className="text-2xl font-bold mb-2">Starter</h2>
+          <p className="text-sm text-gray-500 mb-1">Recommended for 1–10 crew members</p>
+          <p className="text-3xl font-extrabold mb-4">$29<span className="text-base font-medium">/mo</span></p>
+          <ul className="space-y-2 text-sm">
+            <li>Track jobs and customer details</li>
+            <li>Job calendar with to-do checklists</li>
+            <li>Upload before & after job photos</li>
+            <li>Mobile-friendly and easy to use</li>
+            <li>Basic job reports (e.g. total jobs this month, open vs completed)</li>
+          </ul>
+        </div>
+
+        {/* Team Plan */}
+        <div className="bg-white shadow-xl rounded-2xl p-6 border-4 border-blue-500">
+          <h2 className="text-2xl font-bold mb-2">Team</h2>
+          <p className="text-sm text-gray-500 mb-1">Recommended for 10–20 crew members</p>
+          <p className="text-3xl font-extrabold mb-4">$59<span className="text-base font-medium">/mo</span></p>
+          <ul className="space-y-2 text-sm">
+            <li>Everything in Starter</li>
+            <li>Add users with different access levels</li>
+            <li>Update job status from start to finish</li>
+            <li>Add internal notes & comments</li>
+            <li>Track new leads and customers</li>
+            <li>Upload project files (like permits & plans)</li>
+            <li>Connect with Stripe and QuickBooks</li>
+          </ul>
+          <div className="mt-4 text-center text-blue-500 font-semibold">Includes Free 30-Day Trial</div>
+        </div>
+
+        {/* Elite Plan */}
+        <div className="bg-white shadow-xl rounded-2xl p-6 border border-gray-200">
+          <h2 className="text-2xl font-bold mb-2">Elite</h2>
+          <p className="text-sm text-gray-500 mb-1">Recommended for 20+ crew members or multiple teams</p>
+          <p className="text-3xl font-extrabold mb-4">$119<span className="text-base font-medium">/mo</span></p>
+          <ul className="space-y-2 text-sm">
+            <li>Everything in Team</li>
+            <li>Manage crews by location or division</li>
+            <li>Automated reminders and task tracking</li>
+            <li>Advanced job reports (job speed, crew performance, job volume)</li>
+            <li>Sync jobs and payments with QuickBooks/Xero</li>
+            <li>Sync leads with HubSpot or Salesforce</li>
+            <li>Priority support & setup assistance</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="text-center mt-12">
+        <p className="text-gray-600">
+          We’re building the simplest jobsite photo & crew management tool for roofing companies.
+        </p>
+        <p className="text-sm text-gray-500 mt-2">App version coming soon for even faster access from the field.</p>
+      </div>
+    </div>
+  );
+}
