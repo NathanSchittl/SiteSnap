@@ -2,23 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SiteSnap Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SiteSnap</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    nav {
+      background: #1f2937;
+      color: white;
+      padding: 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .logo {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1em;
+      margin-left: 1em;
+      cursor: pointer;
+    }
+    .page {
+      display: none;
+      padding: 2em;
+    }
+    .active {
+      display: block;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .pricing-box {
+      background: white;
+      padding: 1em;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 1em;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to SiteSnap</h1>
-    <nav>
-      <a href="index.html">Dashboard</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="settings.html">Settings</a>
-      <a href="login.html">Login</a>
-      <a href="signup.html">Signup</a>
-    </nav>
-  </header>
-  <main>
-    <p>This is your main dashboard. More features coming soon!</p>
-  </main>
+
+  <nav>
+    <div class="logo">SiteSnap</div>
+    <div>
+      <button onclick="showPage('dashboard')">Dashboard</button>
+      <button onclick="showPage('login')">Login</button>
+      <button onclick="showPage('signup')">Signup</button>
+      <button onclick="showPage('settings')">Settings</button>
+      <button onclick="showPage('pricing')">Pricing</button>
+    </div>
+  </nav>
+
+  <div id="dashboard" class="page active">
+    <h1>Dashboard</h1>
+    <p>This will be your control center with job info, checklists, crew activity, and more.</p>
+  </div>
+
+  <div id="login" class="page">
+    <h1>Login</h1>
+    <p>[Login form goes here]</p>
+  </div>
+
+  <div id="signup" class="page">
+    <h1>Signup</h1>
+    <p>[Signup form goes here]</p>
+  </div>
+
+  <div id="settings" class="page">
+    <h1>Settings</h1>
+    <p>[User preferences, account info, etc.]</p>
+  </div>
+
+  <div id="pricing" class="page">
+    <h1>Pricing Plans</h1>
+
+    <div class="pricing-box">
+      <h2>Starter — $29/mo</h2>
+      <p>Recommended for 1–10 crew members</p>
+      <ul>
+        <li>Track jobs and customer details</li>
+        <li>Job calendar with to-do checklists</li>
+        <li>Upload before & after job photos</li>
+        <li>Mobile-friendly and easy to use</li>
+        <li>Basic job reports (e.g. total jobs this month, open vs completed)</li>
+      </ul>
+    </div>
+
+    <div class="pricing-box">
+      <h2>Team — $59/mo</h2>
+      <p>Recommended for 10–20 crew members</p>
+      <ul>
+        <li>Everything in Starter</li>
+        <li>Add users with different access levels</li>
+        <li>Update job status from start to finish</li>
+        <li>Add internal notes & comments</li>
+        <li>Track new leads and customers</li>
+        <li>Upload project files (like permits & plans)</li>
+        <li>Connect with Stripe and QuickBooks</li>
+      </ul>
+    </div>
+
+    <div class="pricing-box">
+      <h2>Elite — $119/mo</h2>
+      <p>Recommended for 20+ crew members or multiple teams</p>
+      <ul>
+        <li>Everything in Team</li>
+        <li>Manage crews by location or division</li>
+        <li>Automated reminders and task tracking</li>
+        <li>Reports on job speed & crew performance</li>
+        <li>Sync jobs and payments with QuickBooks/Xero</li>
+        <li>Sync leads with HubSpot or Salesforce</li>
+        <li>Priority support & setup assistance</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function showPage(id) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
+
 </body>
 </html>
