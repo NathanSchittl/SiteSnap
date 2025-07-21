@@ -3,138 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SiteSnap</title>
+  <title>SiteSnap Dashboard</title>
   <style>
     body {
       font-family: sans-serif;
+      background-color: #f3f4f6;
       margin: 0;
       padding: 0;
-      background: #f9f9f9;
-      color: #333;
     }
-    nav {
-      background: #1f2937;
+    header {
+      background-color: #1f2937;
       color: white;
-      padding: 1em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding: 1rem;
+      text-align: center;
     }
-    nav .logo {
-      font-weight: bold;
-      font-size: 1.2em;
-    }
-    nav button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1em;
-      margin-left: 1em;
-      cursor: pointer;
-    }
-    .page {
-      display: none;
-      padding: 2em;
-    }
-    .active {
-      display: block;
-    }
-    h1 {
-      margin-top: 0;
-    }
-    .pricing-box {
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
       background: white;
-      padding: 1em;
+      padding: 2rem;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 1em;
+    }
+    h2 {
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.5rem;
+      margin-top: 2rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+    .job-list {
+      margin-top: 1rem;
+    }
+    .job-item {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo">SiteSnap</div>
-    <div>
-      <button onclick="showPage('dashboard')">Dashboard</button>
-      <button onclick="showPage('login')">Login</button>
-      <button onclick="showPage('signup')">Signup</button>
-      <button onclick="showPage('settings')">Settings</button>
-      <button onclick="showPage('pricing')">Pricing</button>
-    </div>
-  </nav>
+<header>
+  <h1>SiteSnap Dashboard</h1>
+</header>
 
-  <div id="dashboard" class="page active">
-    <h1>Dashboard</h1>
-    <p>This will be your control center with job info, checklists, crew activity, and more.</p>
-  </div>
+<div class="container">
+  <h2>Add New Job</h2>
+  <form id="jobForm">
+    <label>Job Name:
+      <input type="text" id="jobName" required />
+    </label>
+    <label>Customer Name:
+      <input type="text" id="customerName" required />
+    </label>
+    <label>Address:
+      <input type="text" id="address" />
+    </label>
+    <label>Before Photo:
+      <input type="file" id="beforePhoto" accept="image/*" />
+    </label>
+    <label>After Photo:
+      <input type="file" id="afterPhoto" accept="image/*" />
+    </label>
+    <label>Checklist:</label>
+    <label><input type="checkbox" id="inspected" /> Site Inspected</label><br/>
+    <label><input type="checkbox" id="completed" /> Work Completed</label><br/>
+    <label><input type="checkbox" id="cleanup" /> Cleanup Done</label><br/><br/>
+    <button type="submit">Add Job</button>
+  </form>
 
-  <div id="login" class="page">
-    <h1>Login</h1>
-    <p>[Login form goes here]</p>
-  </div>
+  <h2>Jobs This Month</h2>
+  <div id="jobList" class="job-list"></div>
+</div>
 
-  <div id="signup" class="page">
-    <h1>Signup</h1>
-    <p>[Signup form goes here]</p>
-  </div>
+<script>
+  const form = document.getElementById('jobForm');
+  const jobList = document.getElementById('jobList');
 
-  <div id="settings" class="page">
-    <h1>Settings</h1>
-    <p>[User preferences, account info, etc.]</p>
-  </div>
+  function loadJobs() {
+    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+    jobList.innerHTML = '';
+    jobs.forEach((job, index) => {
+      const jobDiv = document.createElement('div');
+      jobDiv.className = 'job-item';
+      jobDiv.innerHTML = `
+        <strong>${job.jobName}</strong><br/>
+        Customer: ${job.customerName}<br/>
+        Address: ${job.address || 'N/A'}<br/>
+        Checklist: ${job.checklist.join(', ') || 'None'}<br/>
+        <button onclick="deleteJob(${index})">Delete</button>
+      `;
+      jobList.appendChild(jobDiv);
+    });
+  }
 
-  <div id="pricing" class="page">
-    <h1>Pricing Plans</h1>
+  function deleteJob(index) {
+    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+    jobs.splice(index, 1);
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+    loadJobs();
+  }
 
-    <div class="pricing-box">
-      <h2>Starter — $29/mo</h2>
-      <p>Recommended for 1–10 crew members</p>
-      <ul>
-        <li>Track jobs and customer details</li>
-        <li>Job calendar with to-do checklists</li>
-        <li>Upload before & after job photos</li>
-        <li>Mobile-friendly and easy to use</li>
-        <li>Basic job reports (e.g. total jobs this month, open vs completed)</li>
-      </ul>
-    </div>
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const checklist = [];
+    if (document.getElementById('inspected').checked) checklist.push('Site Inspected');
+    if (document.getElementById('completed').checked) checklist.push('Work Completed');
+    if (document.getElementById('cleanup').checked) checklist.push('Cleanup Done');
 
-    <div class="pricing-box">
-      <h2>Team — $59/mo</h2>
-      <p>Recommended for 10–20 crew members</p>
-      <ul>
-        <li>Everything in Starter</li>
-        <li>Add users with different access levels</li>
-        <li>Update job status from start to finish</li>
-        <li>Add internal notes & comments</li>
-        <li>Track new leads and customers</li>
-        <li>Upload project files (like permits & plans)</li>
-        <li>Connect with Stripe and QuickBooks</li>
-      </ul>
-    </div>
+    const job = {
+      jobName: document.getElementById('jobName').value,
+      customerName: document.getElementById('customerName').value,
+      address: document.getElementById('address').value,
+      checklist: checklist
+    };
 
-    <div class="pricing-box">
-      <h2>Elite — $119/mo</h2>
-      <p>Recommended for 20+ crew members or multiple teams</p>
-      <ul>
-        <li>Everything in Team</li>
-        <li>Manage crews by location or division</li>
-        <li>Automated reminders and task tracking</li>
-        <li>Reports on job speed & crew performance</li>
-        <li>Sync jobs and payments with QuickBooks/Xero</li>
-        <li>Sync leads with HubSpot or Salesforce</li>
-        <li>Priority support & setup assistance</li>
-      </ul>
-    </div>
-  </div>
+    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+    jobs.push(job);
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+    form.reset();
+    loadJobs();
+  });
 
-  <script>
-    function showPage(id) {
-      const pages = document.querySelectorAll('.page');
-      pages.forEach(page => page.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-  </script>
+  window.onload = loadJobs;
+</script>
 
 </body>
 </html>
