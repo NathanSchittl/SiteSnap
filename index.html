@@ -2,148 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SiteSnap Dashboard</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f3f4f6;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #1f2937;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-    }
-    h2 {
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 0.5rem;
-      margin-top: 2rem;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.25rem;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 4px;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      background-color: #3b82f6;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 0.5rem;
-    }
-    .job-list {
-      margin-top: 1rem;
-    }
-    .job-item {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      padding: 1rem;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-600">SiteSnap Dashboard</h1>
+    <nav>
+      <a href="#" class="text-gray-700 mx-2">Dashboard</a>
+      <a href="#" class="text-gray-700 mx-2">Settings</a>
+      <a href="#jobs" class="text-blue-600 font-semibold mx-2">Jobs</a>
+    </nav>
+  </header>
 
-<header>
-  <h1>SiteSnap Dashboard</h1>
-</header>
+  <!-- Main Content -->
+  <main class="p-6">
+    <!-- Jobs Section -->
+    <section id="jobs" class="bg-white rounded shadow p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold">Job & Customer Tracker</h2>
+        <button id="addJobBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">+ Add Job</button>
+      </div>
 
-<div class="container">
-  <h2>Add New Job</h2>
-  <form id="jobForm">
-    <label>Job Name:
-      <input type="text" id="jobName" required />
-    </label>
-    <label>Customer Name:
-      <input type="text" id="customerName" required />
-    </label>
-    <label>Address:
-      <input type="text" id="address" />
-    </label>
-    <label>Before Photo:
-      <input type="file" id="beforePhoto" accept="image/*" />
-    </label>
-    <label>After Photo:
-      <input type="file" id="afterPhoto" accept="image/*" />
-    </label>
-    <label>Checklist:</label>
-    <label><input type="checkbox" id="inspected" /> Site Inspected</label><br/>
-    <label><input type="checkbox" id="completed" /> Work Completed</label><br/>
-    <label><input type="checkbox" id="cleanup" /> Cleanup Done</label><br/><br/>
-    <button type="submit">Add Job</button>
-  </form>
+      <!-- Add Job Form -->
+      <form id="jobForm" class="space-y-4 hidden bg-gray-50 p-4 rounded border border-gray-200">
+        <div>
+          <label class="block text-sm font-medium">Customer Name</label>
+          <input type="text" id="customerName" class="mt-1 w-full border px-3 py-2 rounded" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Job Address</label>
+          <input type="text" id="jobAddress" class="mt-1 w-full border px-3 py-2 rounded" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Job Description</label>
+          <textarea id="jobDescription" rows="3" class="mt-1 w-full border px-3 py-2 rounded" required></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Status</label>
+          <select id="jobStatus" class="mt-1 w-full border px-3 py-2 rounded">
+            <option>Open</option>
+            <option>In Progress</option>
+            <option>Completed</option>
+          </select>
+        </div>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Save Job</button>
+      </form>
 
-  <h2>Jobs This Month</h2>
-  <div id="jobList" class="job-list"></div>
-</div>
+      <!-- Job List -->
+      <div id="jobList" class="mt-6 space-y-4">
+        <!-- Jobs will be displayed here -->
+      </div>
+    </section>
+  </main>
 
-<script>
-  const form = document.getElementById('jobForm');
-  const jobList = document.getElementById('jobList');
+  <script>
+    const form = document.getElementById('jobForm');
+    const addJobBtn = document.getElementById('addJobBtn');
+    const jobList = document.getElementById('jobList');
 
-  function loadJobs() {
-    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-    jobList.innerHTML = '';
-    jobs.forEach((job, index) => {
-      const jobDiv = document.createElement('div');
-      jobDiv.className = 'job-item';
-      jobDiv.innerHTML = `
-        <strong>${job.jobName}</strong><br/>
-        Customer: ${job.customerName}<br/>
-        Address: ${job.address || 'N/A'}<br/>
-        Checklist: ${job.checklist.join(', ') || 'None'}<br/>
-        <button onclick="deleteJob(${index})">Delete</button>
-      `;
-      jobList.appendChild(jobDiv);
-    });
-  }
-
-  function deleteJob(index) {
-    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-    jobs.splice(index, 1);
-    localStorage.setItem('jobs', JSON.stringify(jobs));
-    loadJobs();
-  }
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const checklist = [];
-    if (document.getElementById('inspected').checked) checklist.push('Site Inspected');
-    if (document.getElementById('completed').checked) checklist.push('Work Completed');
-    if (document.getElementById('cleanup').checked) checklist.push('Cleanup Done');
-
-    const job = {
-      jobName: document.getElementById('jobName').value,
-      customerName: document.getElementById('customerName').value,
-      address: document.getElementById('address').value,
-      checklist: checklist
+    addJobBtn.onclick = () => {
+      form.classList.toggle('hidden');
     };
 
-    const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-    jobs.push(job);
-    localStorage.setItem('jobs', JSON.stringify(jobs));
-    form.reset();
-    loadJobs();
-  });
+    form.onsubmit = function (e) {
+      e.preventDefault();
 
-  window.onload = loadJobs;
-</script>
+      const name = document.getElementById('customerName').value;
+      const address = document.getElementById('jobAddress').value;
+      const description = document.getElementById('jobDescription').value;
+      const status = document.getElementById('jobStatus').value;
 
+      const jobCard = document.createElement('div');
+      jobCard.className = 'bg-white p-4 rounded shadow border';
+      jobCard.innerHTML = `
+        <h3 class="text-lg font-bold">${name}</h3>
+        <p class="text-sm text-gray-600">${address}</p>
+        <p class="mt-2">${description}</p>
+        <p class="mt-1 text-sm"><strong>Status:</strong> ${status}</p>
+      `;
+
+      jobList.appendChild(jobCard);
+      form.reset();
+      form.classList.add('hidden');
+    };
+  </script>
 </body>
 </html>
