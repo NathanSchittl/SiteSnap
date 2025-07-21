@@ -1,1 +1,45 @@
-<h1>Login Page</h1><p>Coming soon...</p>
+// Show Sign Up form
+document.getElementById('showSignUp').addEventListener('click', function(){
+  document.getElementById('loginDiv').style.display = 'none';
+  document.getElementById('signUpDiv').style.display = 'block';
+});
+// Show Login form
+document.getElementById('showLogin').addEventListener('click', function(){
+  document.getElementById('signUpDiv').style.display = 'none';
+  document.getElementById('loginDiv').style.display = 'block';
+});
+// Handle Login
+document.getElementById('loginBtn').addEventListener('click', function(){
+  var email = document.getElementById('loginEmail').value;
+  var password = document.getElementById('loginPassword').value;
+  auth.signInWithEmailAndPassword(email, password)
+    .then(function(userCredential) {
+      // Redirect to dashboard after login
+      window.location = 'dashboard.html';
+    })
+    .catch(function(error) {
+      alert(error.message);
+    });
+});
+// Handle Sign Up
+document.getElementById('signUpBtn').addEventListener('click', function(){
+  var email = document.getElementById('signUpEmail').value;
+  var password = document.getElementById('signUpPassword').value;
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(function(userCredential) {
+      var user = userCredential.user;
+      // Create user data in Firestore (default tier: free)
+      return db.collection('users').doc(user.uid).set({
+        email: email,
+        tier: 'free',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
+    .then(function() {
+      // Redirect to dashboard after sign up
+      window.location = 'dashboard.html';
+    })
+    .catch(function(error) {
+      alert(error.message);
+    });
+});
