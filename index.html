@@ -1,93 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SiteSnap Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  <title>Site Name - Login</title>
+  <!-- Bootstrap CSS for styling -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Firebase JS SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <!-- Firebase config and initialization -->
+  <script src="firebase-config.js"></script>
+  <!-- Login page script -->
+  <script src="login.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-  <!-- Header -->
-  <header class="bg-white shadow p-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-blue-600">SiteSnap Dashboard</h1>
-    <nav>
-      <a href="#" class="text-gray-700 mx-2">Dashboard</a>
-      <a href="#" class="text-gray-700 mx-2">Settings</a>
-      <a href="#jobs" class="text-blue-600 font-semibold mx-2">Jobs</a>
-    </nav>
-  </header>
-
-  <!-- Main Content -->
-  <main class="p-6">
-    <!-- Jobs Section -->
-    <section id="jobs" class="bg-white rounded shadow p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold">Job & Customer Tracker</h2>
-        <button id="addJobBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">+ Add Job</button>
+<body>
+  <div class="container mt-5">
+    <h2>Login</h2>
+    <div id="loginDiv">
+      <div class="form-group">
+        <input type="email" id="loginEmail" class="form-control" placeholder="Email">
       </div>
-
-      <!-- Add Job Form -->
-      <form id="jobForm" class="space-y-4 hidden bg-gray-50 p-4 rounded border border-gray-200">
-        <div>
-          <label class="block text-sm font-medium">Customer Name</label>
-          <input type="text" id="customerName" class="mt-1 w-full border px-3 py-2 rounded" required />
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Job Address</label>
-          <input type="text" id="jobAddress" class="mt-1 w-full border px-3 py-2 rounded" required />
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Job Description</label>
-          <textarea id="jobDescription" rows="3" class="mt-1 w-full border px-3 py-2 rounded" required></textarea>
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Status</label>
-          <select id="jobStatus" class="mt-1 w-full border px-3 py-2 rounded">
-            <option>Open</option>
-            <option>In Progress</option>
-            <option>Completed</option>
-          </select>
-        </div>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Save Job</button>
-      </form>
-
-      <!-- Job List -->
-      <div id="jobList" class="mt-6 space-y-4">
-        <!-- Jobs will be displayed here -->
+      <div class="form-group">
+        <input type="password" id="loginPassword" class="form-control" placeholder="Password">
       </div>
-    </section>
-  </main>
-
-  <script>
-    const form = document.getElementById('jobForm');
-    const addJobBtn = document.getElementById('addJobBtn');
-    const jobList = document.getElementById('jobList');
-
-    addJobBtn.onclick = () => {
-      form.classList.toggle('hidden');
-    };
-
-    form.onsubmit = function (e) {
-      e.preventDefault();
-
-      const name = document.getElementById('customerName').value;
-      const address = document.getElementById('jobAddress').value;
-      const description = document.getElementById('jobDescription').value;
-      const status = document.getElementById('jobStatus').value;
-
-      const jobCard = document.createElement('div');
-      jobCard.className = 'bg-white p-4 rounded shadow border';
-      jobCard.innerHTML = `
-        <h3 class="text-lg font-bold">${name}</h3>
-        <p class="text-sm text-gray-600">${address}</p>
-        <p class="mt-2">${description}</p>
-        <p class="mt-1 text-sm"><strong>Status:</strong> ${status}</p>
-      `;
-
-      jobList.appendChild(jobCard);
-      form.reset();
-      form.classList.add('hidden');
-    };
-  </script>
+      <button id="loginBtn" class="btn btn-primary">Log In</button>
+      <p class="mt-2">Don't have an account? <a href="#" id="showSignUp">Sign up</a></p>
+    </div>
+    <div id="signUpDiv" style="display:none;">
+      <h2>Sign Up</h2>
+      <div class="form-group">
+        <input type="email" id="signUpEmail" class="form-control" placeholder="Email">
+      </div>
+      <div class="form-group">
+        <input type="password" id="signUpPassword" class="form-control" placeholder="Password">
+      </div>
+      <button id="signUpBtn" class="btn btn-success">Sign Up</button>
+      <p class="mt-2">Already have an account? <a href="#" id="showLogin">Log in</a></p>
+    </div>
+  </div>
 </body>
 </html>
