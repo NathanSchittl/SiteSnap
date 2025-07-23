@@ -7,10 +7,10 @@ import { getStorage } from "firebase/storage";
 // TODO: Replace with your Firebase project configuration (from Firebase console)
 // You can find these under Project Settings → General → Your apps.
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
+  apiKey: "AIzaSyClDU6x5KzOcYQC09OjwNQFkMhNiBYuKjc",
+  authDomain: sitesnap-28da9.firebaseapp.com",
+  projectId: "sitesnap-28da9",
+  storageBucket: "sitesnap-28da9.firebasestorage.app",
   // ... other config values ...
 };
 
