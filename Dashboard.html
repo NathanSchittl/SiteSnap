@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SiteSnap Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    .sidebar {
+      width: 240px;
+      height: 100vh;
+      background-color: #1f2937;
+      color: white;
+      padding: 20px;
+      position: fixed;
+    }
+    .sidebar h4 {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .sidebar a {
+      display: block;
+      color: #ccc;
+      margin-bottom: 10px;
+      text-decoration: none;
+    }
+    .sidebar a:hover {
+      color: #fff;
+      font-weight: bold;
+    }
+    .topbar {
+      height: 60px;
+      background-color: #f8f9fa;
+      margin-left: 240px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 20px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .main {
+      margin-left: 240px;
+      margin-top: 60px;
+      padding: 20px;
+    }
+    .locked {
+      color: gray;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h4>SiteSnap</h4>
+    <a href="#" onclick="loadFeature('jobs')">Jobs</a>
+    <a href="#" onclick="loadFeature('calendar')">Calendar</a>
+    <a href="#" onclick="loadFeature('tasks')">Tasks</a>
+    <a href="#" onclick="loadFeature('photos')">Photos</a>
+    <a href="#" onclick="loadFeature('reports')">Reports</a>
+    <a href="#" onclick="loadFeature('team')" class="proOnly">Team Chat (Pro)</a>
+    <a href="#" onclick="loadFeature('workflow')" class="eliteOnly">Workflow Automation (Elite)</a>
+  </div>
+
+  <div class="topbar">
+    <div class="me-3" id="userEmail">User</div>
+    <button class="btn btn-outline-secondary btn-sm me-2" onclick="goToSettings()">Settings</button>
+    <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main" id="mainContent">
+    <h2>Welcome to SiteSnap</h2>
+    <p>Select a feature from the left menu to begin.</p>
+  </div>
+
+  <script>
+    // Simulate user's tier (replace with real logic)
+    const userTier = localStorage.getItem('tier') || 'starter'; // starter, team, elite
+    const userEmail = localStorage.getItem('email') || 'user@example.com';
+
+    document.getElementById('userEmail').innerText = userEmail;
+
+    // Lock/Unlock features based on tier
+    window.onload = () => {
+      if (userTier === 'starter') {
+        document.querySelectorAll('.proOnly').forEach(el => el.classList.add('locked'));
+        document.querySelectorAll('.eliteOnly').forEach(el => el.classList.add('locked'));
+      } else if (userTier === 'team') {
+        document.querySelectorAll('.eliteOnly').forEach(el => el.classList.add('locked'));
+      }
+    };
+
+    function loadFeature(name) {
+      const tier = userTier;
+      const main = document.getElementById('mainContent');
+
+      const blocked = {
+        team: ['workflow'],
+        starter: ['team', 'workflow']
+      };
+
+      if (blocked[tier] && blocked[tier].includes(name)) {
+        main.innerHTML = `
+          <h3>Feature Locked</h3>
+          <p>This feature is not available on your current plan. <a href="pricing.html">Upgrade here</a>.</p>
+        `;
+        return;
+      }
+
+      // Simple content per feature
+      const features = {
+        jobs: "<h3>Jobs</h3><p>Here you can manage your job list and add new ones.</p>",
+        calendar: "<h3>Calendar</h3><p>View crew assignments and schedules.</p>",
+        tasks: "<h3>Tasks</h3><p>Checklist and task list per job.</p>",
+        photos: "<h3>Photos</h3><p>Upload before and after job photos.</p>",
+        reports: "<h3>Reports</h3><p>Basic dashboard with job metrics.</p>",
+        team: "<h3>Team Chat</h3><p>Internal communication hub for your crew.</p>",
+        workflow: "<h3>Workflow Automation</h3><p>Auto-reminders and smart job tracking.</p>"
+      };
+
+      main.innerHTML = features[name] || "<p>Feature not found.</p>";
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    function goToSettings() {
+      window.location.href = "settings.html";
+    }
+  </script>
+</body>
+</html>
