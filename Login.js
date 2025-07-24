@@ -1,56 +1,33 @@
-// src/pages/Login.js
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { auth } from '../firebase';
+import { auth, db } from './firebase.js';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
-function Login() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/dashboard');  // Redirect on success
-    } catch (err) {
-      setError(err.message);
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Fetch tier level from Firestore (optional)
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+
+    let tier = 'starter'; // default
+
+    if (userSnap.exists()) {
+      tier = userSnap.data().tier || 'starter';
     }
-  };
 
-  return (
-    <div className="row justify-content-center">
-      <div className="col-md-6">
-        <h2>Login</h2>
-        {error && <div className="alert alert-danger">{error}</div>}
-        <form onSubmit={handleLogin}>
-          <div className="mb-3">
-            <label>Email</label>
-            <input
-              type="email" className="form-control"
-              value={email} onChange={e => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label>Password</label>
-            <input
-              type="password" className="form-control"
-              value={password} onChange={e => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button className="btn btn-primary">Login</button>
-        </form>
-        <p className="mt-3">
-          Don't have an account? <Link to="/signup">Sign up here</Link>.
-        </p>
-      </div>
-    </div>
-  );
-}
+    // Store user info in localStorage
+    localStorage.setItem('email', email);
+    localStorage.setItem('tier', tier);
 
-export default Login;
+    // ✅ Redirect to dashboard
+    window.location.href = 'dashboard.html';
+
+  } catch (error) {
+    alert('Login failed: ' + error.message);
+  }
+});
